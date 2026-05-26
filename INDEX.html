@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-Hant-HK">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>香港的士司機筆試備考工作台 (ABCD 標準四選一版)</title>
+    <style>
+        :root {
+            --primary-color: #b32424; /* 的士紅 */
+            --secondary-color: #2c3e50;
+            --bg-color: #f8f9fa;
+            --card-bg: #ffffff;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6; margin: 0; padding: 0; background-color: var(--bg-color); color: #333;
+        }
+        header { background-color: var(--primary-color); color: white; text-align: center; padding: 1.5rem; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+        nav { display: flex; justify-content: center; background: var(--secondary-color); position: sticky; top: 0; z-index: 100; }
+        nav button { background: none; border: none; color: white; padding: 1rem 1.5rem; font-size: 1rem; cursor: pointer; transition: 0.3s; }
+        nav button:hover, nav button.active { background-color: var(--primary-color); }
+        .container { max-width: 1000px; margin: 2rem auto; padding: 0 1rem; }
+        .section { display: none; background: var(--card-bg); padding: 2rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .section.active { display: block; }
+        h2 { color: var(--secondary-color); border-bottom: 2px solid var(--primary-color); padding-bottom: 0.5rem; margin-top: 0; }
+        h3 { color: var(--secondary-color); margin-top: 1.5rem; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 1.5rem; margin-top: 1.5rem; }
+        .card { border: 1px solid #ddd; border-radius: 6px; padding: 1.2rem; background: #fff; }
+        .btn-link { display: inline-block; background: var(--primary-color); color: white; text-decoration: none; padding: 0.5rem 1rem; border-radius: 4px; margin-top: 0.5rem; }
+        .form-group { margin-bottom: 1rem; }
+        label { display: block; font-weight: bold; margin-bottom: 0.5rem; }
+        input, select, textarea { width: 100%; padding: 0.7rem; border: 1px solid #ddd; border-radius: 4px; box-sizing: border-box; }
+        
+        /* 按鈕樣式 */
+        .btn { border: none; padding: 0.7rem 1.5rem; border-radius: 4px; cursor: pointer; font-size: 1rem; font-weight: bold; transition: 0.2s; }
+        .btn-submit { background: #27ae60; color: white; }
+        .btn-submit:hover { background: #219653; }
+        .btn-export { background: #2980b9; color: white; margin-right: 0.5rem; }
+        .btn-export:hover { background: #2471a3; }
+        .btn-danger { background: #c0392b; color: white; }
+        
+        .quiz-box { background: #f9f9f9; padding: 1.5rem; border-left: 5px solid var(--primary-color); margin-bottom: 1rem; border-radius: 4px; }
+        
+        /* 交通標誌圖片專屬樣式 */
+        .quiz-image-container { text-align: center; margin: 1rem 0; }
+        .quiz-img { max-width: 100%; max-height: 200px; height: auto; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.15); background-color: #fff; padding: 5px; }
+        
+        .options-route { display: grid; gap: 0.5rem; margin-top: 1rem; }
+        .option-btn { background: white; border: 1px solid #ccc; padding: 0.8rem; text-align: left; border-radius: 4px; cursor: pointer; width: 100%; transition: 0.2s; }
+        .option-btn:hover { background: #f0f0f0; }
+        .correct { background: #2ecc71 !important; color: white; border-color: #27ae60; }
+        .wrong { background: #e74c3c !important; color: white; border-color: #c0392b; }
+        .score-board { font-size: 1.2rem; font-weight: bold; margin-bottom: 1rem; color: var(--primary-color); }
+        
+        .import-box { background: #ebf5fb; border: 2px dashed #3498db; padding: 1.5rem; border-radius: 6px; margin-bottom: 2rem; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>香港的士司機筆試備考工作台</h1>
+        <p>標準考場規格：全面支援 A、B、C、D 四選一題型</p>
+    </header>
+
+    <nav>
+        <button onclick="switchTab('study')" id="tab-study" class="active">📚 學習資料板塊</button>
+        <button onclick="switchTab('quiz')" id="tab-quiz">📝 模擬考試板塊 (<span id="total-pool-count">20</span>題)</button>
+        <button onclick="switchTab('custom')" id="tab-custom">➕ 批量導入/管理題庫</button>
+    </nav>
+
+    <div class="container">
+        
+        <!-- 1. 學習資料板塊 -->
+        <div id="sec-study" class="section active">
+            <h2>官方最新溫習指引（對齊兩部制）</h2>
+            <div class="grid">
+                <div class="card">
+                    <h3>甲部：的士營運法例及地方試題</h3>
+                    <p>考核的士則例、計程錶法例、行李與車費規則，以及精簡後的本港重要著名地標位置。</p>
+                    <a href="https://www.td.gov.hk/tc/public_services/licences_and_permits/driving_test/wt/sqotwt/index.html" target="_blank" class="btn-link">運輸署官方指南連結</a>
+                </div>
+                <div class="card">
+                    <h3>乙部：道路使用者守則</h3>
+                    <p>考核全港通用交通標誌、路面劃線規則、行車安全距離、限速、隧道安全及基本道路急救常識。</p>
+                    <a href="https://www.td.gov.hk/tc/road_safety/road_users_code/index.html" target="_blank" class="btn-link">道路守則網上電子版</a>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. 模擬考試板塊 -->
+        <div id="sec-quiz" class="section">
+            <h2>模擬考試練習（隨機抽題）</h2>
+            <div class="score-board" id="score-text">已答題目: 0 | 正確: 0</div>
+            <button onclick="loadQuizQuestion()" style="margin-bottom: 1rem; padding: 0.5rem 1rem; cursor:pointer; font-weight:bold;">換下一題 🔄</button>
+            
+            <div id="quiz-container">
+                <!-- 題目會由 JS 動態生成 -->
+            </div>
+        </div>
+
+        <!-- 3. 自主輸入與批量導入板塊 -->
+        <div id="sec-custom" class="section">
+            <h2>題庫數據管理中心</h2>
+            
+            <!-- 批量導入區 -->
+            <div class="import-box">
+                <h3 style="margin-top:0; color:#2980b9;">📥 批量導入題庫 (支援 Excel CSV / TXT)</h3>
+                <p style="font-size: 0.9rem; color:#555;">
+                    <strong>📊 Excel 使用方法：</strong> 請在 Excel 中建立 <strong>7 個欄位</strong>：<code>組別</code>、<code>題目問題</code>、<code>選項A</code>、<code>選項B</code>、<code>選項C</code>、<code>選項D</code>、<code>答案(A/B/C/D)</code>。<br>
+                    編輯完後，選擇<strong>「另存新檔」-> 檔案類型選擇「CSV (逗號分隔) (*.csv)」</strong>，即可直接在此上傳！<br>
+                    <strong>💡 圖形題提醒：</strong> 若有圖片，只需在 Excel 的題目字串最後面加上 <code>[IMG:圖片網址]</code> 即可。
+                </p>
+                <input type="file" id="file-input" accept=".csv,.txt" style="padding:10px 0;">
+                <button onclick="handleBatchImport()" class="btn btn-export" style="background:#3498db;">確認導入檔案</button>
+            </div>
+
+            <div style="margin-bottom: 2rem;">
+                <h3>💾 題庫備份與跨裝置同步</h3>
+                <p style="font-size: 0.9rem; color:#555;">在電腦導入完後，點擊「導出」產出備份文字檔，將該文字檔傳到手機後在手機版網頁重新導入即可同步！</p>
+                <button onclick="exportCustomQuestions()" class="btn btn-export">📤 導出我的自建題庫 (.txt)</button>
+                <button onclick="clearAllCustom()" class="btn btn-danger btn">🗑️ 清空所有自建題目</button>
+            </div>
+
+            <hr style="border:0; border-top: 1px solid #eee; margin: 2rem 0;">
+
+            <h3>✍️ 單筆手動錄入題庫</h3>
+            <form id="custom-question-form" onsubmit="saveSingleQuestion(event)">
+                <div class="form-group">
+                    <label for="q-type">核心組別：</label>
+                    <select id="q-type" required>
+                        <option value="甲部：的士營運法例及地方">甲部：的士營運法例及地方試題</option>
+                        <option value="乙部：道路使用者守則">乙部：道路使用者守則</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="q-text">題目問題（若有圖片，請在尾端加上 [IMG:圖片網址]）：</label>
+                    <textarea id="q-text" rows="2" placeholder="例如：這個交通標誌代表什麼意思？[IMG:https://i.imgur.com/xxxx.png]" required></textarea>
+                </div>
+                <div class="form-group"><label>選項 A：</label><input type="text" id="q-a" required></div>
+                <div class="form-group"><label>選項 B：</label><input type="text" id="q-b" required></div>
+                <div class="form-group"><label>選項 C：</label><input type="text" id="q-c" required></div>
+                <div class="form-group"><label>選項 D（若無可留空）：</label><input type="text" id="q-d"></div>
+                <div class="form-group">
+                    <label for="q-ans">正確答案：</label>
+                    <select id="q-ans" required>
+                        <option value="A">選項 A</option>
+                        <option value="B">選項 B</option>
+                        <option value="C">選項 C</option>
+                        <option value="D">選項 D</option>
+                    </select>
+                </div>
+                <button type="submit" class="btn btn-submit">💾 儲存單筆題目</button>
+            </form>
+
+            <h3 style="margin-top: 2rem;">我的自建題目列表 (<span id="custom-count">0</span> 題)</h3>
+            <ul id="custom-list" style="padding-left: 20px; max-height: 300px; overflow-y: auto; background: #fafafa; border: 1px solid #eee; padding: 10px; border-radius: 4px;"></ul>
+        </div>
+
+    </div>
+
+    <script>
+        // 內建 20 題官方精選（已全部補充 D 選項，完全對齊標準）
+        const defaultQuestions = [
+            { type: "甲部：的士營運法例及地方", question: "根據的士則例，的士司機在沒有合理辯解下拒絕接受租用，最高可被判罰款多少及監禁多久？", a: "罰款 $5,000 及監禁 3 個月", b: "罰款 $10,000 及監禁 6 個月", c: "罰款 $15,000 及監禁 9 個月", d: "罰款 $20,000 及監禁 12 個月", ans: "b" },
+            { type: "甲部：的士營運法例及地方", question: "的士司機如無合理辯解，未有將的士計程錶按動至記錄位置即開始行程，即屬犯罪，可被判罰款：", a: "HK$5,000", b: "HK$10,000", c: "HK$2,000", d: "HK$1,000", ans: "a" },
+            { type: "甲部：的士營運法例及地方", question: "當的士租用終止時，乘客如要求收據，司機必須免費提供。收據上必須印有什麼資料？", a: "車牌號碼、總車費及附加費", b: "車牌號碼、司機姓名及身份證號碼", c: "車牌號碼、行車里數及開車時間", d: "車牌號碼、乘客姓名及日期", ans: "a" },
+            { type: "甲部：的士營運法例及地方", question: "的士司機在以下哪種情況下，可合法拒絕接載乘客？", a: "乘客身上有嚴重令人厭惡的污漬或異味", b: "乘客前往的地點經常交通擠塞", c: "乘客攜帶了符合規定體積的輕便行李", d: "乘客要求前往過海隧道對岸", ans: "a" },
+            { type: "甲部：的士營運法例及地方", question: "的士司機在駕駛時，必須在車內展示的士司機證。該司機證必須展示於：", a: "司機證座位旁邊的車窗上", b: "的士儀錶板上左邊的的士司機證牌照座內", c: "遮陽板背面", d: "車頂倒後鏡下方", ans: "b" },
+            { type: "甲部：的士營運法例及地方", question: "若乘客在的士內遺留物件，司機在拾獲後應在多少小時內送交警署？", a: "12 小時內", b: "6 小時內", c: "48 小時內", d: "24 小時內", ans: "d" },
+            { type: "甲部：的士營運法例及地方", question: "下列哪一個政府部門或主要辦公大樓位於香港島金鐘？", a: "稅務大樓", b: "高等法院", c: "入境事務處總部", d: "灣仔政府大樓", ans: "b" },
+            { type: "甲部：的士營運法例及地方", question: "「伊利沙伯醫院」位於本港哪一個地區？", a: "沙田區", b: "油麻地/何文田區", c: "柴灣區", d: "深水埗區", ans: "b" },
+            { type: "甲部：的士營運法例及地方", question: "下列哪一家著名酒店位於尖沙咀梳士巴利道？", a: "半島酒店 (The Peninsula)", b: "香格里拉大酒店", c: "文華東方酒店", d: "四季酒店", ans: "a" },
+            { type: "甲部：的士營運法例及地方", question: "香港國際機場（赤鱲角）位於以下哪一個島嶼附近或區域？", a: "青衣", b: "大嶼山", c: "馬灣", d: "長洲", ans: "b" },
+            { type: "甲部：的士營運法例及地方", question: "「威爾斯親王醫院」是以下哪一個地區的主要公立醫院？", a: "元朗", b: "大埔", c: "沙田", d: "屯門", ans: "c" },
+            { type: "甲部：的士營運法例及地方", question: "香港主要旅遊景點「海洋公園」位於：", a: "大嶼山昂坪", b: "香港島黃竹坑", c: "新界西貢", d: "九龍尖沙咀", ans: "b" },
+            { type: "乙部：道路使用者守則", question: "在沒有交通燈控制的斑馬線前，當有行人已踏足斑馬線時，司機必須：", a: "輕鳴喇叭提示行人並加速通過", b: "減速或停車，讓行人優先過馬路", c: "在行人身後緩慢繞過", d: "閃動大燈警告行人讓路", ans: "b" },
+            { type: "乙部：道路使用者守則", question: "在設有「安全車速監察限制」的道路上，私家車/的士在乾燥路面上的基本兩秒指引是指：", a: "與前車保持至少兩秒的行車距離", b: "超車時必須在兩秒內完成", c: "看倒後鏡的時間每次不得超過兩秒", d: "煞車反應時間必須在兩秒內", ans: "a" },
+            { type: "乙部：道路使用者守則", question: "路面上繪有「雙白線」，且你線道的一邊是「連續的實線」，這意味著：", a: "在確保安全及視線清晰時可以越線超車", b: "除非要避開固定障礙物或轉左，否則絕對不得越線或騎線駛過", c: "該線只用作分隔逆向車流，沒有任何超車限制", d: "只准公共巴士越線", ans: "b" },
+            { type: "乙部：道路使用者守則", question: "在快速公路上駕駛時，若無合理辯解，的士司機長期佔用最右邊的行車線（快線），即屬：", a: "完全合法，因為的士是公共交通工具", b: "只要不超速便沒有問題", c: "違法行為", d: "視乎當時交通流量而定", ans: "c" },
+            { type: "乙部：道路使用者守則", question: "看見路旁有「單黃線」劃線，並設有時間牌，這代表：", a: "在指定時間內不准停車（包括上落客貨）", b: "任何時間均不准停車", c: "只准的士上落客，不准停泊", d: "指定時間內不准泊車，但可不設限上落客貨", ans: "a" },
+            { type: "乙部：道路使用者守則", question: "若在公共道路上發生交通意外並導致有人受傷，司機必須在何時內向警方報告？", a: "在意外發生後 12 小時內", b: "在意外發生後 48 小時內", c: "只需通知保險公司，不需報警", d: "在意外發生後 24 小時內，且必須盡快", ans: "d" },
+            { type: "乙部：道路使用者守則", question: "在遇上黃色警告閃燈的交通燈號（一般在深夜或故障時），司機應該：", a: "維持原速通過，因為閃燈代表自己有絕對優先權", b: "減速並加倍小心，準備在必要時讓路或停車", c: "必須完全停車等候 3 秒才能前進", d: "加速儘快通過路口", ans: "b" },
+            { type: "乙部：道路使用者守則", question: "以下哪一項是進入隧道前必須遵守的法例規定？", a: "必須亮起車頭近光燈（車頭大燈）", b: "必須長鳴喇叭", c: "必須打開所有車窗保持空氣流通", d: "必須關閉收音機", ans: "a" }
+        ];
+
+        let totalAnswered = 0; let totalCorrect = 0; let currentQuestion = null;
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('nav button').forEach(b => b.classList.remove('active'));
+            document.getElementById(`sec-${tabName}`).classList.add('active');
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            if(tabName === 'quiz') { loadQuizQuestion(); }
+        }
+
+        function getAllQuestions() {
+            const custom = JSON.parse(localStorage.getItem('taxi_real_pool_v4')) || [];
+            return [...defaultQuestions, ...custom];
+        }
+
+        function updateNavCount() {
+            document.getElementById('total-pool-count').innerText = getAllQuestions().length;
+        }
+
+        function loadQuizQuestion() {
+            const allQ = getAllQuestions();
+            if (allQ.length === 0) return;
+            const randIndex = Math.floor(Math.random() * allQ.length);
+            currentQuestion = allQ[randIndex];
+
+            let displayQuestionText = currentQuestion.question;
+            let imageHtml = "";
+            const imgRegex = /\[IMG:(https?:\/\/[^\]]+)\]/i;
+            const match = displayQuestionText.match(imgRegex);
+            
+            if (match) {
+                const imgUrl = match[1];
+                imageHtml = `<div class="quiz-image-container"><img src="${imgUrl}" class="quiz-img" alt="交通標誌圖片"></div>`;
+                displayQuestionText = displayQuestionText.replace(imgRegex, "");
+            }
+
+            // 動態判斷是否有 D 選項，如果沒有就隱藏 D 按鈕
+            let dBtnHtml = "";
+            if (currentQuestion.d && currentQuestion.d.trim() !== "") {
+                dBtnHtml = `<button class="option-btn" onclick="checkAnswer('d', this)"><b>D.</b> ${currentQuestion.d}</button>`;
+            }
+
+            document.getElementById('quiz-container').innerHTML = `
+                <div class="quiz-box">
+                    <span style="background:#b32424; color:white; padding:3px 8px; border-radius:3px; font-size:0.8rem; font-weight:bold;">${currentQuestion.type}</span>
+                    <p style="font-size:1.15rem; font-weight:bold; margin-top:0.8rem; color:#2c3e50;">${displayQuestionText}</p>
+                    ${imageHtml}
+                    <div class="options-route">
+                        <button class="option-btn" onclick="checkAnswer('a', this)"><b>A.</b> ${currentQuestion.a}</button>
+                        <button class="option-btn" onclick="checkAnswer('b', this)"><b>B.</b> ${currentQuestion.b}</button>
+                        <button class="option-btn" onclick="checkAnswer('c', this)"><b>C.</b> ${currentQuestion.c}</button>
+                        ${dBtnHtml}
+                    </div>
+                    <div id="quiz-feedback" style="margin-top:1.2rem; font-size:1.1rem; font-weight:bold;"></div>
+                </div>
+            `;
+        }
+
+        function checkAnswer(chosen, btnElement) {
+            const allButtons = document.querySelectorAll('.option-btn');
+            allButtons.forEach(btn => btn.disabled = true);
+            totalAnswered++;
+            const correctAnsUpper = currentQuestion.ans.toUpperCase();
+
+            if (chosen.toLowerCase() === currentQuestion.ans.toLowerCase()) {
+                btnElement.classList.add('correct');
+                document.getElementById('quiz-feedback').innerHTML = "<span style='color:#27ae60;'>答對了！🎯</span>";
+                totalCorrect++;
+            } else {
+                btnElement.classList.add('wrong');
+                document.getElementById('quiz-feedback').innerHTML = `<span style='color:#c0392b;'>答錯了 ❌ 標準答案是 [ ${correctAnsUpper} ]</span>`;
+                allButtons.forEach(btn => {
+                    if(btn.innerText.trim().toUpperCase().startsWith(correctAnsUpper)) btn.classList.add('correct');
+                });
+            }
+            document.getElementById('score-text').innerText = `已答題目: ${totalAnswered} | 正確: ${totalCorrect}`;
+        }
+
+        function saveSingleQuestion(e) {
+            e.preventDefault();
+            const newQ = {
+                type: document.getElementById('q-type').value,
+                question: document.getElementById('q-text').value,
+                a: document.getElementById('q-a').value,
+                b: document.getElementById('q-b').value,
+                c: document.getElementById('q-c').value,
+                d: document.getElementById('q-d').value || "",
+                ans: document.getElementById('q-ans').value.toLowerCase()
+            };
+            saveToStorage([newQ]);
+            document.getElementById('custom-question-form').reset();
+            alert('單筆題目儲存成功！');
+            updateCustomList(); updateNavCount();
+        }
+
+        function saveToStorage(newArr) {
+            let current = JSON.parse(localStorage.getItem('taxi_real_pool_v4')) || [];
+            current = [...current, ...newArr];
+            localStorage.setItem('taxi_real_pool_v4', JSON.stringify(current));
+        }
+
+        // 🌟 升級版智慧導入：相容 7 欄位 (ABCD) 與舊版 6 欄位 (ABC)
+        function handleBatchImport() {
+            const fileInput = document.getElementById('file-input');
+            if (!fileInput.files[0]) { alert('請先選擇 CSV 或 TXT 檔案！'); return; }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+
+            reader.onload = function(e) {
+                const text = e.target.result;
+                const lines = text.split(/\r?\n/);
+                const importedQuestions = [];
+                let successCount = 0;
+
+                lines.forEach(line => {
+                    if (!line.trim()) return;
+                    
+                    let separator = line.includes('|') ? '|' : ',';
+                    const parts = line.split(separator).map(p => p.replace(/^["']|["']$/g, '').trim());
+                    
+                    // 情況 A：標準 7 欄位格式 (組別, 題目, A, B, C, D, 答案)
+                    if (parts.length >= 7) {
+                        importedQuestions.push({
+                            type: parts[0], question: parts[1],
+                            a: parts[2], b: parts[3], c: parts[4], d: parts[5],
+                            ans: parts[6].toLowerCase()
+                        });
+                        successCount++;
+                    } 
+                    // 情況 B：相容舊的 6 欄位格式 (組別, 題目, A, B, C, 答案) -> D自動留空
+                    else if (parts.length === 6) {
+                        importedQuestions.push({
+                            type: parts[0], question: parts[1],
+                            a: parts[2], b: parts[3], c: parts[4], d: "",
+                            ans: parts[5].toLowerCase()
+                        });
+                        successCount++;
+                    }
+                });
+
+                if (importedQuestions.length > 0) {
+                    saveToStorage(importedQuestions);
+                    alert(`成功批量導入 ${successCount} 題考題！`);
+                    fileInput.value = '';
+                    updateCustomList(); updateNavCount();
+                } else {
+                    alert('未偵測到有效格式。請確認 Excel 是否有 7 個欄位，或是否有確實「另存新檔」為 CSV 格式。');
+                }
+            };
+            reader.readAsText(file, 'UTF-8');
+        }
+
+        function exportCustomQuestions() {
+            const custom = localStorage.getItem('taxi_real_pool_v4');
+            if (!custom || JSON.parse(custom).length === 0) { alert('目前沒有自建題庫可以導出！'); return; }
+
+            const arr = JSON.parse(custom);
+            let outText = "";
+            arr.forEach(q => {
+                outText += `${q.type}|${q.question}|${q.a}|${q.b}|${q.c}|${q.d}|${q.ans.toUpperCase()}\n`;
+            });
+
+            const blob = new Blob([outText], { type: 'text/plain;charset=utf-8;' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.setAttribute("download", "my_taxi_abcd_questions.txt");
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        function clearAllCustom() {
+            if(confirm('確定要清空所有自己導入/建立的題目嗎？（內建的20題官方真體不會受影響）')) {
+                localStorage.removeItem('taxi_real_pool_v4');
+                updateCustomList(); updateNavCount();
+            }
+        }
+
+        function updateCustomList() {
+            const customQuestions = JSON.parse(localStorage.getItem('taxi_real_pool_v4')) || [];
+            document.getElementById('custom-count').innerText = customQuestions.length;
+            const list = document.getElementById('custom-list');
+            list.innerHTML = '';
+            
+            customQuestions.forEach((q, index) => {
+                const li = document.createElement('li');
+                li.style.marginBottom = "10px";
+                let cleanText = q.question.replace(/\[IMG:[^\]]+\]/i, " 🖼️(帶有圖形)");
+                let dDisplay = q.d ? ` | D: ${q.d}` : "";
+                li.innerHTML = `
+                    <strong>[${q.type}]</strong> ${cleanText} <br>
+                    <span style="font-size:0.9rem; color:#27ae60;">(A: ${q.a} | B: ${q.b} | C: ${q.c}${dDisplay} -> 答案: ${q.ans.toUpperCase()})</span>
+                    <button onclick="deleteQuestion(${index})" style="background:#e74c3c; color:white; border:none; padding:1px 5px; border-radius:3px; cursor:pointer; margin-left:10px;">刪除</button>
+                `;
+                list.appendChild(li);
+            });
+        }
+
+        function deleteQuestion(index) {
+            let customQuestions = JSON.parse(localStorage.getItem('taxi_real_pool_v4')) || [];
+            customQuestions.splice(index, 1);
+            localStorage.setItem('taxi_real_pool_v4', JSON.stringify(customQuestions));
+            updateCustomList(); updateNavCount();
+        }
+
+        window.onload = function() { updateCustomList(); updateNavCount(); };
+    </script>
+</body>
+</html>
